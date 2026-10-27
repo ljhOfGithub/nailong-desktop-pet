@@ -3,6 +3,7 @@ const nailong = document.querySelector('#nailong');
 const naiwa = document.querySelector('#naiwa');
 const speech = document.querySelector('#speech');
 const hearts = document.querySelector('#hearts');
+const { NAIWA_PHASES, NAIWA_SEQUENCE_END } = window.naiwaSequence;
 
 const copy = {
   nailong: ['再摸一下！', '今天也要开心呀', '我闻到零食了', '嗷呜～', '陪你一会儿'],
@@ -16,6 +17,12 @@ let bubbleTimer;
 let moodTimer;
 let pendingTapTimer;
 let lastTapAt = 0;
+let naiwaSequenceTimers = [];
+
+function clearNaiwaSequenceTimers() {
+  naiwaSequenceTimers.forEach(clearTimeout);
+  naiwaSequenceTimers = [];
+}
 
 function showBubble(text, duration = 1700) {
   clearTimeout(bubbleTimer);
@@ -25,11 +32,58 @@ function showBubble(text, duration = 1700) {
 }
 
 function setMood(mood, duration = 1500) {
+  clearNaiwaSequenceTimers();
   clearTimeout(moodTimer);
   stage.dataset.mood = mood;
   moodTimer = setTimeout(() => {
     delete stage.dataset.mood;
   }, duration);
+}
+
+function playBattleCue() {
+  if (!soundEnabled) return;
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  const context = new AudioContext();
+  const now = context.currentTime;
+
+  [0, .09].forEach((offset, index) => {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(index ? 92 : 124, now + offset);
+    gain.gain.setValueAtTime(.0001, now + offset);
+    gain.gain.exponentialRampToValueAtTime(.07, now + offset + .008);
+    gain.gain.exponentialRampToValueAtTime(.0001, now + offset + .075);
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start(now + offset);
+    oscillator.stop(now + offset + .085);
+  });
+
+  setTimeout(() => context.close(), 500);
+}
+
+function runNaiwaSequence(line) {
+  clearNaiwaSequenceTimers();
+  clearTimeout(moodTimer);
+  stage.dataset.mood = 'laugh';
+  showBubble(line, 1450);
+  playSyntheticLaugh();
+
+  NAIWA_PHASES.slice(1).forEach((phase) => {
+    naiwaSequenceTimers.push(setTimeout(() => {
+      stage.dataset.mood = phase.name;
+      if (phase.name === 'battle') {
+        showBubble('咳。严肃点。', 1250);
+        playBattleCue();
+      }
+    }, phase.at));
+  });
+
+  moodTimer = setTimeout(() => {
+    delete stage.dataset.mood;
+    naiwaSequenceTimers = [];
+  }, NAIWA_SEQUENCE_END);
 }
 
 function sprinkleHearts() {
@@ -71,12 +125,12 @@ function playSyntheticLaugh() {
 
 function interact() {
   const lines = copy[character];
-  showBubble(lines[Math.floor(Math.random() * lines.length)]);
+  const line = lines[Math.floor(Math.random() * lines.length)];
 
   if (character === 'naiwa') {
-    setMood('laugh', 1800);
-    playSyntheticLaugh();
+    runNaiwaSequence(line);
   } else {
+    showBubble(line);
     setMood('happy', 1200);
     sprinkleHearts();
   }
@@ -89,6 +143,8 @@ function nap() {
 }
 
 function switchCharacter(next) {
+  clearNaiwaSequenceTimers();
+  clearTimeout(moodTimer);
   character = next === 'naiwa' ? 'naiwa' : 'nailong';
   nailong.hidden = character !== 'nailong';
   naiwa.hidden = character !== 'naiwa';
