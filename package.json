@@ -1,0 +1,35 @@
+{
+  "name": "nailong-desktop-pet",
+  "version": "0.1.0",
+  "description": "一只有奶龙与奶娃双形态的透明桌面宠物",
+  "main": "src/main.js",
+  "author": "ljhOfGithub",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test",
+    "pack": "electron-builder --dir",
+    "dist:mac": "electron-builder --mac dmg zip --publish never"
+  },
+  "devDependencies": {
+    "electron": "^39.2.1",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.ljhofgithub.nailong-desktop-pet",
+    "productName": "奶龙桌宠",
+    "artifactName": "Nailong-Desktop-Pet-${version}-${arch}.${ext}",
+    "files": [
+      "src/**/*",
+      "package.json",
+      "NOTICE.md"
+    ],
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    }
+  }
+}
