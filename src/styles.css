@@ -57,12 +57,14 @@ body {
 }
 
 .sprite--naiwa-idle,
-.sprite--naiwa-laugh {
+.sprite--naiwa-laugh,
+.sprite--naiwa-battle {
   transform: scale(1.02);
-  transition: opacity 80ms linear;
+  transition: opacity 55ms linear;
 }
 
-.sprite--naiwa-laugh {
+.sprite--naiwa-laugh,
+.sprite--naiwa-battle {
   opacity: 0;
 }
 
@@ -133,6 +135,33 @@ body {
   opacity: 1;
 }
 
+.pet-stage[data-mood="freeze"] .character--naiwa {
+  animation: freeze-snap .18s steps(2, end) both;
+  filter: saturate(.72) contrast(1.08);
+}
+
+.pet-stage[data-mood="freeze"] .sprite--naiwa-idle,
+.pet-stage[data-mood="freeze"] .sprite--naiwa-battle {
+  opacity: 0;
+}
+
+.pet-stage[data-mood="freeze"] .sprite--naiwa-laugh {
+  opacity: 1;
+}
+
+.pet-stage[data-mood="battle"] .character--naiwa {
+  animation: battle-snap .54s cubic-bezier(.18, .86, .24, 1.18) both;
+}
+
+.pet-stage[data-mood="battle"] .sprite--naiwa-idle,
+.pet-stage[data-mood="battle"] .sprite--naiwa-laugh {
+  opacity: 0;
+}
+
+.pet-stage[data-mood="battle"] .sprite--naiwa-battle {
+  opacity: 1;
+}
+
 .hearts {
   position: absolute;
   z-index: 4;
@@ -192,6 +221,18 @@ body {
   0%, 100% { transform: translate(0, 0) rotate(-1deg); }
   25% { transform: translate(-2px, -3px) rotate(1.3deg); }
   75% { transform: translate(2px, 1px) rotate(-.6deg); }
+}
+
+@keyframes freeze-snap {
+  0% { transform: translate(2px, 1px) rotate(-.6deg); }
+  100% { transform: translateY(3px) scale(.985, 1.012); }
+}
+
+@keyframes battle-snap {
+  0% { transform: translateY(7px) scale(.94, 1.045); }
+  34% { transform: translateY(-9px) scale(1.035, .975) rotate(.8deg); }
+  58% { transform: translateY(1px) scale(.99, 1.01) rotate(-.35deg); }
+  100% { transform: translateY(0) scale(1) rotate(0); }
 }
 
 @keyframes float-heart {
