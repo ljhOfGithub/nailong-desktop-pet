@@ -3,8 +3,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { sanitizeSettings } = require('./lib/settings');
 const { clampWindowPosition, getDefaultPosition } = require('./lib/position');
+const { WINDOW_SIZE } = require('./lib/window-size');
 
-const WINDOW_SIZE = Object.freeze({ width: 300, height: 380 });
 let mainWindow;
 let settings;
 
