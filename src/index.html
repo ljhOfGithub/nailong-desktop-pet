@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:;" />
+    <title>奶龙桌宠</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="pet-stage" class="pet-stage" aria-label="奶龙桌宠，可拖动，右键打开菜单">
+      <output id="speech" class="speech" aria-live="polite">摸摸我嘛</output>
+      <div id="hearts" class="hearts" aria-hidden="true"></div>
+      <div id="zzz" class="zzz" aria-hidden="true"><span>Z</span><span>z</span><span>z</span></div>
+
+      <section id="nailong" class="character character--nailong" aria-label="奶龙形态">
+        <img class="sprite sprite--nailong" src="assets/nailong-idle.png" alt="黄色圆润、绿色小眼睛的奶龙" draggable="false" />
+      </section>
+
+      <section id="naiwa" class="character character--naiwa" aria-label="奶娃形态" hidden>
+        <img class="sprite sprite--naiwa-idle" src="assets/naiwa-idle.png" alt="高长梨形、浅绿凸眼的奶娃" draggable="false" />
+        <img class="sprite sprite--naiwa-laugh" src="assets/naiwa-laugh.png" alt="捧腹大笑的奶娃" draggable="false" />
+      </section>
+
+      <p class="hint">拖动我 · 右键有菜单</p>
+    </main>
+    <script src="renderer.js"></script>
+  </body>
+</html>
